@@ -7,6 +7,7 @@
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam,
                             LPARAM lParam);
 
+// cl user32.lib gdi32.lib helloengine_win.c
 // the entry point for any Windows program
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPTSTR lpCmdLine, int nCmdShow) {
@@ -70,6 +71,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam,
                             LPARAM lParam) {
   // sort through and find what code to run for the message given
   switch (message) {
+    case WM_PAINT: {
+      PAINTSTRUCT ps;
+      HDC hdc = BeginPaint(hWnd, &ps);
+      RECT rec = {20, 20, 60, 80};
+      HBRUSH brush = (HBRUSH)GetStockObject(BLACK_BRUSH);
+
+      FillRect(hdc, &rec, brush);
+
+      EndPaint(hWnd, &ps);
+    } break;
     // this message is read when the window is closed
     case WM_DESTROY: {
       // close the application entirely

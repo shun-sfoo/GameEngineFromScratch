@@ -74,6 +74,13 @@ int main(void) {
   while ((pEvent = xcb_wait_for_event(pConn)) && !isQuit) {
     switch (pEvent->response_type & ~0x80) {
       case XCB_EXPOSE:
+        // 在C代码当中，变量的定义必须出现在每个block的开始，而不能夹杂在语句之间。
+        // 在这里使用了{}，将这部分声明为一个语句块，也就是block。这样我们就可以在这里面申明rect变量了。
+        {
+          xcb_rectangle_t rect = {20, 20, 60, 80};
+          xcb_poly_fill_rectangle(pConn, window, foreground, 1, &rect);
+          xcb_flush(pConn);
+        }
         break;
       case XCB_KEY_PRESS:
         isQuit = 1;
@@ -81,6 +88,8 @@ int main(void) {
     }
     free(pEvent);
   }
+
+  xcb_disconnect(pConn);
 
   return 0;
 }
